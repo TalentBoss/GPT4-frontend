@@ -1,11 +1,31 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Alegreya Sans", sans-serif;
+}
+
+body {
+  background: #343541;
+}
 .App {
+  width: 100vw;
+  height: 100vh;
+  background: #343541;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
   text-align: center;
+  overflow-y:auto;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
