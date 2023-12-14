@@ -7,6 +7,8 @@ import axios from "axios";
 const FootyChat = () => {
   const [message, setMessage] = useState('');
   const [propsArray, setPropsArray] = useState([]);
+  const [isStart, setIsStart] = useState(true);
+
   const scrollRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -73,6 +75,12 @@ const FootyChat = () => {
 
   useEffect(() => {
     scrollToBottom();
+    if (isStart === true) {
+      axios.post('/openai/start-response')
+        .then(response => console.log(response.data.data))
+        .catch(err => err)
+      setIsStart(false);
+    }
   }, [propsArray]);
 
   return (
