@@ -9,7 +9,7 @@ const ChatStripe = ({ isAI, value, uniqueID }) => {
           <img src={isAI ? "/bot.svg" : '/user.svg'}
             alt={isAI ? 'bot' : 'user'} />
         </div>
-        <div className={isAI ? 'message message-ai' : 'message message-user'} id={ uniqueID }>{ value } This is the story of how I died</div>
+        <div className={isAI ? 'message message-ai' : 'message message-user'} id={ uniqueID }>{ value }</div>
       </div>
     </div>
   )
