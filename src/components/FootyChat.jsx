@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import '../css/FootyChat.css';
 import ChatStripe from "./ChatStripe";
+import axios from "axios";
 
 
 const FootyChat = () => {
@@ -24,51 +25,45 @@ const FootyChat = () => {
   }
 
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (message.trim() !== '') {
-      await setNewState(false, message);
-      sendMessageToGPT('Hi how are you!');
+      setNewState(false, message);
+      sendMessageToGPT(message);
     }
     else setMessage('');
   }
 
-  const setNewState = async (isAI, message) => {
+  const setNewState = (isAI, message) => {
     const uniqueId = generateUniqueId();
     const newProps = {
       isAI: isAI,
-      value: message,
+      value: message.trimEnd(),
       uniqueId: uniqueId
     }
 
     setMessage('');
-    let real = propsArray
-    real.push(newProps)
+    let real = propsArray;
+    real.push(newProps);
     setPropsArray([...real]);
-    
-    return
   }
 
   const sendMessageToGPT = (msg) => {
-    const response = msg;
-    setMessage(response);
-    setNewState(true, msg);
-    return response;
-
+    const request = {
+      msg: msg,
+      sender: 'user'
+    };
+    axios.post('/openai/get-response', request)
+      .then(response => {
+        setMessage(response.data.data);
+        setNewState(true, response.data.data);
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (message.trim() !== '') {
-  //     console.log('!!!!')
-  //     await setNewState(false);
-  //     await sendMessageToGPT('Hi how are you!');
-
-  //   }
-  //   else setMessage('');
-  // }
-
-  const enterKeyPressHandle = async (e) => {
+  const enterKeyPressHandle = (e) => {
     if (e.keyCode === 13 && !e.shiftKey) handleSubmit(e);
   }
 
@@ -78,7 +73,7 @@ const FootyChat = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [message]);
+  }, [propsArray]);
 
   return (
     <>

@@ -41,7 +41,7 @@ const FootyChat = () => {
 
   }
 
-  const sendMessageToGPT = (msg) => {
+  const sendMessageToGPT = async (msg) => {
     console.log('@@@', msg)
 
     const response = msg;
@@ -56,7 +56,7 @@ const FootyChat = () => {
     if (message.trim() !== '') {
       console.log('!!!!')
       await setNewState(false);
-       await sendMessageToGPT('Hi how are you!');
+      await sendMessageToGPT('Hi how are you!');
 
     }
     else setMessage('');

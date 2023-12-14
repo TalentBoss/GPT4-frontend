@@ -3,7 +3,7 @@ import '../css/ChatStripe.css';
 
 const ChatStripe = ({ isAI, value, uniqueID }) => {
   return (
-    <div className="wrapper ai">
+    <div className={isAI ? 'wrapper ai' : 'wrapper'}>
       <div className="chat">
         <div className="profile">
           <img src={isAI ? "/bot.svg" : '/user.svg'}
