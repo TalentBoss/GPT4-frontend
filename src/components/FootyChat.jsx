@@ -1,17 +1,8 @@
-import React, {useEffect, useRef, useState} from "react";
-import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
 import '../css/FootyChat.css';
 import ChatStripe from "./ChatStripe";
 
-const sendMessageToGPT = (msg) => {
-  axios.post('/', msg)
-    .then(res => {
 
-    })
-    .catch(err => {
-
-    })
-}
 const FootyChat = () => {
   const [message, setMessage] = useState('');
   const [propsArray, setPropsArray] = useState([]);
@@ -24,6 +15,7 @@ const FootyChat = () => {
     }
   };
 
+
   const generateUniqueId = () => {
     const timeStamp = Date.now();
     const randomNumber = Math.random();
@@ -32,26 +24,51 @@ const FootyChat = () => {
   }
 
 
-
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (message.trim() !== '') {
-      const uniqueId = generateUniqueId();
-      const newProps = {
-        isAI: false,
-        value: message,
-        uniqueId: uniqueId
-      }
-      setMessage( '');
-      setPropsArray([
-        ...propsArray,
-        newProps
-      ]);
+      await setNewState(false, message);
+      sendMessageToGPT('Hi how are you!');
     }
     else setMessage('');
   }
 
-  const enterKeyPressHandle = e => {
+  const setNewState = async (isAI, message) => {
+    const uniqueId = generateUniqueId();
+    const newProps = {
+      isAI: isAI,
+      value: message,
+      uniqueId: uniqueId
+    }
+
+    setMessage('');
+    let real = propsArray
+    real.push(newProps)
+    setPropsArray([...real]);
+    
+    return
+  }
+
+  const sendMessageToGPT = (msg) => {
+    const response = msg;
+    setMessage(response);
+    setNewState(true, msg);
+    return response;
+
+  }
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (message.trim() !== '') {
+  //     console.log('!!!!')
+  //     await setNewState(false);
+  //     await sendMessageToGPT('Hi how are you!');
+
+  //   }
+  //   else setMessage('');
+  // }
+
+  const enterKeyPressHandle = async (e) => {
     if (e.keyCode === 13 && !e.shiftKey) handleSubmit(e);
   }
 
@@ -68,16 +85,16 @@ const FootyChat = () => {
       <div className="message-container" ref={scrollRef}>
         {
           propsArray.map((item, id) => (
-            <ChatStripe key={id} {...item }/>
+            <ChatStripe key={id} {...item} />
           ))
         }
       </div>
-       <form onSubmit={ handleSubmit } onKeyUp={ enterKeyPressHandle }>
-          <textarea name="prompt" rows="4" cols="1" placeholder="Ask anything..." onChange={ handleMessageChange } value={ message }></textarea>
-          <button type="submit">
-            <img src="/send.svg" alt="send message"/>
-          </button>
-        </form>
+      <form onSubmit={handleSubmit} onKeyUp={enterKeyPressHandle}>
+        <textarea name="prompt" rows="4" cols="1" placeholder="Ask anything..." onChange={handleMessageChange} value={message}></textarea>
+        <button type="submit">
+          <img src="/send.svg" alt="send message" />
+        </button>
+      </form>
     </>
   )
 }
